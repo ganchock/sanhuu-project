@@ -36,7 +36,7 @@ var financeController = (function() {
     };
 
     var data = {
-        allItems: {
+        items: {
             inc: [],
             exp: []
         },
@@ -44,7 +44,26 @@ var financeController = (function() {
             inc: 0,
             exp: 0
         }
+    };
+    return {
+        addItems: function(type, desc, val) {
+            var items, id;
+            if (data.items[type].length === 0) id = 1;
+            else {
+                id = data.items[type][data.items[type].length - 1].id + 1;
+            }
+            if (type === 'inc') {
+                item = new Income(id, desc, val);
+            } else {
+                item = new Expense(id, desc, val);
+            }
+            data.items[type].push(item);
+        },
+        seeData: function() {
+            return data;
+        }
     }
+
 
 })();
 
@@ -52,11 +71,13 @@ var financeController = (function() {
 var appController = (function(uiController, fnController) {
     var ctrlAddItem = function() {
         // 1. Оруулах өгөгдлийг дэлгэцээс олж авна.
-        console.log(uiController.getInput())
+        var input = uiController.getInput();
+        console.log(input)
             // 2. Олж авсан өгөгдлүүдээ санхүүгийн контроллерт дамжуулж тэнд холбоно.
-            // 3. Олж авсан өгөгдлүүдээ вэб дээрээ тохирох хэсэгт нь гаргана.
-            // 4. Төсвийн тооцоолно.
-            // 5. Эцсийн үлдэгдэл, тооцоог дэлгэцэнд гаргана.
+        financeController.addItems(input.type, input.description, input.value);
+        // 3. Олж авсан өгөгдлүүдээ вэб дээрээ тохирох хэсэгт нь гаргана.
+        // 4. Төсвийн тооцоолно.
+        // 5. Эцсийн үлдэгдэл, тооцоог дэлгэцэнд гаргана.
     };
 
     var setUpEventListeners = function() {
